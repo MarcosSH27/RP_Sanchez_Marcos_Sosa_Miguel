@@ -1,3 +1,7 @@
+# Game made with AI assistance by:
+# Miguel Sosa
+# Marcos Sanchez
+
 import random
 import sys
 import os
