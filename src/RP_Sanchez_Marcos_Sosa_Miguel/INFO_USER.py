@@ -16,7 +16,7 @@ class Infouser(object):
         """
         self._name = None
         self.robot = None
-        self.__pub_user_info = rospy.Publisher("user_information", Usermsg, queue_size=10)
+        self.__pub_user_info = rospy.Publisher("user_information", Robotinfomsg, queue_size=10)
 
         time.sleep(3)
 
@@ -24,9 +24,9 @@ class Infouser(object):
 
     def main (self):
         
-        player = Usermsg()
+        player = Robotinfomsg()
         player.name = input("Please write your name: \n")
-        player.user = input("Please write your surname: \n")
+        player.surname = input("Please write your surname: \n")
         player.age = input("Please write your age: \n")
 
         self.__pub_user_info.publish(player) 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         rospy.init_node(name_node)
         rospy.loginfo("The node %s has started", name_node)
 
-        node = RobotInfo()
+        node = Infouser()
         rospy.spin()
         
     except rospy.ROSInterruptException:
