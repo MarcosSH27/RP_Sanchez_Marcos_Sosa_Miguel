@@ -6,7 +6,7 @@ import rospy
 import rospkg
 import time
 
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String, Int64
 from robotinfo_msgs.msg import Robotinfomsg
 
 class Infouser(object):
