@@ -7,7 +7,7 @@ import rospkg
 import time
 
 from std_msgs.msg import String, Int64
-from robotinfo_msgs.msg import Robotinfomsg
+from user_msgs.msg import user_msgs
 
 
 class RobotInfoSub(object):
