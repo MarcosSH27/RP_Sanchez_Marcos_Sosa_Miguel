@@ -2,11 +2,18 @@
 # Miguel Sosa
 # Marcos Sanchez
 
+import roslib
+import rospy
+import rospkg
+import time
 import random
 import sys
 import os
 import pygame
 import math
+
+from std_msgs.msg import String, Int64
+from robotinfo_msgs.msg import User_msg
 
 # Initialize pygame
 pygame.init()
@@ -437,6 +444,33 @@ def game_loop():
 
     return show_game_over()
 
+class Game():
+    def __init__(self):
+        """
+        Init method.
+        """
+        # Class variables
+
+        self.__pub_user_info = rospy.Subscriber("user_information", User_msg, self.callback1)
+
+        time.sleep(3)
+
+        self.main()
+
+    def main (self):
+
+        rospy.loginfo("     Subscriber")
+
+    def callback1(self, player):
+        try:
+            rospy.loginfo("Received message in callback!")
+            rospy.loginfo(" The name is [%s]", player.name)
+            rospy.loginfo(" The username is [%s]", player.username)
+            rospy.loginfo(" The age is [%s]", player.age)
+        except Exception as e:
+            rospy.logerr("Error in callback: %s", str(e))
+
+'''
 # Main game loop
 show_welcome_screen()
 while game_loop():
@@ -444,3 +478,18 @@ while game_loop():
 
 pygame.quit()
 sys.exit()
+'''
+if __name__ == '__main__':
+    try:
+        name_node = "game"
+        rospy.init_node(name_node)
+        rospy.loginfo("The node %s has started", name_node)
+
+        #create and spin the node 
+        node = Game()
+
+        # Keep the node running until it is shut down
+        rospy.spin()
+
+    except rospy.ROSInterruptException:
+        pass

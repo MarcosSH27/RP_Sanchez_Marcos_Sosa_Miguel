@@ -7,21 +7,17 @@ import rospkg
 import time
 
 from std_msgs.msg import String, Int64
-<<<<<<< HEAD
-from user_msgs.msg import user_msgs
-=======
-from robotinfo_msgs.msg import User
->>>>>>> fd3d28e1496c5762cbf1146308c33c47a68f82a2
+from robotinfo_msgs.msg import User_msg
 
 
-class RobotInfoSub(object):
+class Result(object):
     def __init__(self):
         """
         Init method.
         """
         # Class variables
 
-        self.__pub_user_info = rospy.Subscriber("user_information", User, self.callback1)
+        self.__pub_user_info = rospy.Subscriber("user_information", User_msg, self.callback1)
 
         time.sleep(3)
 
@@ -31,33 +27,25 @@ class RobotInfoSub(object):
 
         rospy.loginfo("     Subscriber")
 
-    def callback1(self, data1):
+    def callback1(self, player):
+        try:
+            rospy.loginfo("Received message in callback!")
+            rospy.loginfo(" The name is [%s]", player.name)
+            rospy.loginfo(" The username is [%s]", player.username)
+            rospy.loginfo(" The age is [%s]", player.age)
+        except Exception as e:
+            rospy.logerr("Error in callback: %s", str(e))
 
-        rospy.loginfo(" Hello I'm the callback 1 subscriber..." )
-        rospy.loginfo(" The name is [%s]", data1)
-
-    def callback2(self, data2):
-        print(data2)
-        
-        rospy.loginfo(" Hello I'm the callback 2 subscriber..." )
-        rospy.loginfo(" The username is [%s]", str(data2))
-    
-    def callback3(self,data3):
-        print(data3)
-        rospy.loginfo(" Hello I'm the callback 3 subscriber..." )
-        rospy.loginfo(" The age is [%s]", str(data3))
 
 
 if __name__ == '__main__':
     try:
-        # Initialize the node with a name, e.g., 'name_robot'
-        rospy.init_node('robotinfosub')
-
-        # Log an informational message
-        rospy.loginfo("The node robot_info has started")
+        name_node = "results"
+        rospy.init_node(name_node)
+        rospy.loginfo("The node %s has started", name_node)
 
         #create and spin the node 
-        node = RobotInfoSub()
+        node = Result()
 
         # Keep the node running until it is shut down
         rospy.spin()
