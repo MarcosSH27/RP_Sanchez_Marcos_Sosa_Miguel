@@ -1,6 +1,11 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 # Game made with AI assistance by:
 # Miguel Sosa
 # Marcos Sanchez
+
+
 
 import roslib
 import rospy
@@ -455,11 +460,15 @@ class Game():
 
         time.sleep(3)
 
-        self.main()
-
     def main (self):
 
-        rospy.loginfo("     Subscriber")
+        rospy.loginfo("Game started")
+        show_welcome_screen()
+        while game_loop():
+            pass
+
+        pygame.quit()
+        sys.exit()
 
     def callback1(self, player):
         try:
@@ -467,6 +476,8 @@ class Game():
             rospy.loginfo(" The name is [%s]", player.name)
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
+
+            self.main()
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
 
