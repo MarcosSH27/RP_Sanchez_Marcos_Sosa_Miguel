@@ -7,11 +7,19 @@ project(RP_Sanchez_Marcos_Sosa_Miguel)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+<<<<<<< HEAD
 #find_package(catkin REQUIRED COMPONENTS
 #  message_generation
 #  rospy
 #  std_msgs
 #)
+=======
+find_package(catkin REQUIRED COMPONENTS
+  rospy
+  std_msgs
+  message_generation
+)
+>>>>>>> fd3d28e1496c5762cbf1146308c33c47a68f82a2
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -47,11 +55,18 @@ project(RP_Sanchez_Marcos_Sosa_Miguel)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
+<<<<<<< HEAD
 # add_message_files(
 #   FILES
 #   User_msgs.msg
 #   Message2.msg
 #  )
+=======
+ #add_message_files(
+ #  FILES
+ #  User.msg
+ #)
+>>>>>>> fd3d28e1496c5762cbf1146308c33c47a68f82a2
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -68,10 +83,10 @@ project(RP_Sanchez_Marcos_Sosa_Miguel)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ #generate_messages(
+ #  DEPENDENCIES
+ #  std_msgs
+ #)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

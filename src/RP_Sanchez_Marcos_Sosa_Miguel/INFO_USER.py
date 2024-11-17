@@ -26,7 +26,7 @@ class Infouser(object):
         
         player = User()
         player.name = input("Please write your name: \n")
-        player.surname = input("Please write your surname: \n")
+        player.username = input("Please write your username: \n")
         player.age = input("Please write your age: \n")
 
         self.__pub_user_info.publish(player) 
