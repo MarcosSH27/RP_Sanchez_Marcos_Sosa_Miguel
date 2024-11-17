@@ -7,7 +7,7 @@ import rospkg
 import time
 
 from std_msgs.msg import String, Int64
-from msg import User_msgs
+from robotinfo_msgs.msg import User
 
 class Infouser(object):
     def __init__(self):
@@ -16,7 +16,7 @@ class Infouser(object):
         """
         self._name = None
         self.robot = None
-        self.__pub_user_info = rospy.Publisher("user_information", Robotinfomsg, queue_size=10)
+        self.__pub_user_info = rospy.Publisher("user_information", User, queue_size=10)
 
         time.sleep(3)
 
@@ -24,7 +24,7 @@ class Infouser(object):
 
     def main (self):
         
-        player = Robotinfomsg()
+        player = User()
         player.name = input("Please write your name: \n")
         player.surname = input("Please write your surname: \n")
         player.age = input("Please write your age: \n")

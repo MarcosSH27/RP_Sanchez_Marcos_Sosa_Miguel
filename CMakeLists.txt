@@ -7,10 +7,11 @@ project(RP_Sanchez_Marcos_Sosa_Miguel)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-  rospy
-  std_msgs
-)
+#find_package(catkin REQUIRED COMPONENTS
+#  message_generation
+#  rospy
+#  std_msgs
+#)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -48,9 +49,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   Message1.msg
+#   User_msgs.msg
 #   Message2.msg
-# )
+#  )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
