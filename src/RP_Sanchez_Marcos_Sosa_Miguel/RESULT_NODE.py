@@ -7,7 +7,7 @@ import rospkg
 import time
 
 from std_msgs.msg import String, Int64
-from robotinfo_msgs.msg import Robotinfomsg
+from robotinfo_msgs.msg import User
 
 
 class RobotInfoSub(object):
@@ -17,7 +17,7 @@ class RobotInfoSub(object):
         """
         # Class variables
 
-        self.__pub_user_info = rospy.Subscriber("user_information", Robotinfomsg, self.callback1)
+        self.__pub_user_info = rospy.Subscriber("user_information", User, self.callback1)
 
         time.sleep(3)
 
@@ -36,7 +36,13 @@ class RobotInfoSub(object):
         print(data2)
         
         rospy.loginfo(" Hello I'm the callback 2 subscriber..." )
-        rospy.loginfo(" The battery is [%s]", str(data2))
+        rospy.loginfo(" The username is [%s]", str(data2))
+    
+    def callback3(self,data3):
+        print(data3)
+        rospy.loginfo(" Hello I'm the callback 3 subscriber..." )
+        rospy.loginfo(" The age is [%s]", str(data3))
+
 
 if __name__ == '__main__':
     try:
