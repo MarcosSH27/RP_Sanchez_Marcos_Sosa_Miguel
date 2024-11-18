@@ -17,9 +17,11 @@ class Result(object):
         """
         # Class variables
 
-        self.__pub_user_info = rospy.Subscriber("user_information", User_msg, self.callback1)
+        self.__pub_user_info = rospy.Subscriber("user_information", User_msg, self.user_info)
 
-        time.sleep(3)
+        self.__pub_score = rospy.Subscriber("result_information", Int64, self.results)
+
+        time.sleep(2)
 
         self.main()
 
@@ -27,12 +29,20 @@ class Result(object):
 
         rospy.loginfo("     Subscriber")
 
-    def callback1(self, player):
+    def user_info(self, player):
         try:
-            rospy.loginfo("Received message in callback!")
+            rospy.loginfo("Received user_info in callback!")
             rospy.loginfo(" The name is [%s]", player.name)
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
+        except Exception as e:
+            rospy.logerr("Error in callback: %s", str(e))
+
+    def results(self, score):
+        try:
+            rospy.loginfo("Received results in callback!")
+            rospy.loginfo(" The score is [%s]", score)
+
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
 

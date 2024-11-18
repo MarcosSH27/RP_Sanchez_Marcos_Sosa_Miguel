@@ -18,7 +18,7 @@ class Infouser(object):
         self.robot = None
         self.__pub_user_info = rospy.Publisher("user_information", User_msg, queue_size=10)
 
-        time.sleep(3)
+        time.sleep(0.5)
 
         self.main()
 
