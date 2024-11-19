@@ -23,8 +23,7 @@ from robotinfo_msgs.msg import User_msg
 # Initialize pygame
 pygame.init()
 
-# Initialize Pygame
-pygame.init()
+
 '''
 # Screen setup
 WIDTH, HEIGHT = 800, 600
@@ -462,7 +461,7 @@ class Game():
         """
         # Class variables
 
-        self.__pub_user_info = rospy.Subscriber("user_information", User_msg, self.welcome)
+        self.__sub_user_info = rospy.Subscriber("user_information", User_msg, self.welcome)
 
         self.__pub_score = rospy.Publisher("result_information", Int64, queue_size=10)
 
@@ -559,12 +558,12 @@ class Game():
         self.POINTS_PER_LEVEL = 20
 
         self.waiting = True
-
+        '''
         self.enemy_speed
         self.ENEMY_SPAWN_RATE 
         self.big_enemy_speed
         self.BIG_ENEMY_SPAWN_RATE
-
+        '''
         self.player_trail
 
         self.score
@@ -581,12 +580,12 @@ class Game():
         self.power_up_timer
         self.power_up_pos 
         self.last_shot_time 
-        self.ENEMY_SPAWN_RATE 
+        # self.ENEMY_SPAWN_RATE 
         self.current_level
 
         # self.end_image
 
-    def game(self):
+    def game(self, player):
 
         rospy.loginfo("Game phase started!")
 
@@ -594,13 +593,13 @@ class Game():
         # Initialize the mixer
         pygame.mixer.init()
         # Load and play background music
-        pygame.mixer.music.load('background_music.mp3')  # Make sure to replace with your actual music file
+        pygame.mixer.music.load('background_music.mp3')  
         pygame.mixer.music.play(-1)  # -1 means loop indefinitely
 
         # Set the volume (0.0 to 1.0)
         pygame.mixer.music.set_volume(0.1)  # Adjust this value to decrease volume as needed
 
-        self.show_welcome_screen()
+        self.show_welcome_screen(player)
         while self.game_loop():
             pass
 
@@ -616,13 +615,42 @@ class Game():
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
 
-            self.game()
+            self.game(player)
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
 
     def final(self):
         rospy.loginfo("Final phase reached, calculating final score...")
         self.__pub_score.publish(self.score)
+
+    def control_pygame(self):
+        self.keys = pygame.key.get_pressed()
+        if self.keys[pygame.K_LEFT]:
+            self.player_x = max(0, self.player_x - self.player_speed)
+        if self.keys[pygame.K_RIGHT]:
+            self.player_x = min(self.WIDTH - self.player_size, self.player_x + self.player_speed)
+        if self.keys[pygame.K_UP]:
+            self.player_y = max(0, self.player_y - self.player_speed)
+        if self.keys[pygame.K_DOWN]:
+            self.player_y = min(self.HEIGHT - self.player_size, self.player_y + self.player_speed)
+
+        # Shooting with cooldown
+        self.current_time = pygame.time.get_ticks()
+        if self.current_time - self.last_shot_time > self.SHOOT_COOLDOWN:
+            self.dx, self.dy = 0, 0
+            if self.keys[pygame.K_a]:
+                self.dx = -1
+            elif self.keys[pygame.K_d]:
+                self.dx = 1
+            if self.keys[pygame.K_w]:
+                self.dy = -1
+            elif self.keys[pygame.K_s]:
+                self.dy = 1
+                
+            if self.dx != 0 or self.dy != 0:
+                self.bullets.append([self.player_x + self.player_size // 2, self.player_y + self.player_size // 2, self.dx, self.dy])
+                self.last_shot_time = self.current_time
+                #shoot_sound.play()
 
     def show_level_screen(self):
         self.screen.fill(self.BLACK)
@@ -759,19 +787,25 @@ class Game():
                     sys.exit()
                 if self.event.type == pygame.KEYDOWN:
                     if self.event.key == pygame.K_r:
-                        pygame.mixer.music.load('background_music.mp3')  # Make sure to replace with your actual music file
+                        pygame.mixer.music.load('background_music.mp3')  
                         pygame.mixer.music.play(-1)  # Restart background music
+                        # Enemy setup
+                        self.enemy_speed = 1.5  # Reduced from 2 to make the game easier
+                        self.ENEMY_SPAWN_RATE = 180
+                        # Big enemy setup
+                        self.big_enemy_speed = 1
+                        self.BIG_ENEMY_SPAWN_RATE = 600
                         return True
                     elif self.event.key == pygame.K_q:
                         return False
 
-    def show_welcome_screen(self):
+    def show_welcome_screen(self, player):
         # Start playing background music
         pygame.mixer.music.play(-1)  # -1 means loop indefinitely
         
         self.screen.blit(self.background_image, (0, 0))
         # welcome_text = font.render("Welcome to Zombies Warrior", True, WHITE)
-        self.start_text = self.font.render("Press any key to start", True, self.WHITE)
+        self.start_text = self.font.render(f"Welcome {player.name}! Press any key to start", True, self.WHITE)
         # screen.blit(welcome_text, (WIDTH//2 - welcome_text.get_width()//2, HEIGHT//2 - 50))
         self.screen.blit(self.start_text, (self.WIDTH//2 - self.start_text.get_width()//2, self.HEIGHT//2 + 260))
         pygame.display.flip()
@@ -829,6 +863,7 @@ class Game():
                 if self.event.type == pygame.QUIT:
                     self.running = False
 
+            '''
             self.keys = pygame.key.get_pressed()
             if self.keys[pygame.K_LEFT]:
                 self.player_x = max(0, self.player_x - self.player_speed)
@@ -838,9 +873,12 @@ class Game():
                 self.player_y = max(0, self.player_y - self.player_speed)
             if self.keys[pygame.K_DOWN]:
                 self.player_y = min(self.HEIGHT - self.player_size, self.player_y + self.player_speed)
+            '''
+            self.control_pygame()
 
             self.update_player_trail()
 
+            '''
             # Shooting with cooldown
             self.current_time = pygame.time.get_ticks()
             if self.current_time - self.last_shot_time > self.SHOOT_COOLDOWN:
@@ -858,6 +896,7 @@ class Game():
                     self.bullets.append([self.player_x + self.player_size // 2, self.player_y + self.player_size // 2, self.dx, self.dy])
                     self.last_shot_time = self.current_time
                     #shoot_sound.play()
+            '''
 
             # Spawn enemies
             if random.randint(1, self.ENEMY_SPAWN_RATE) == 1:
@@ -969,6 +1008,9 @@ pygame.quit()
 sys.exit()
 '''
 if __name__ == '__main__':
+    # Initialize pygame
+    pygame.init()
+    
     try:
         name_node = "game"
         rospy.init_node(name_node)
