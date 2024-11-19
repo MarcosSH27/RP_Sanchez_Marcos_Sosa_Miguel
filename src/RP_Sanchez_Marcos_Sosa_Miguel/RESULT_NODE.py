@@ -9,7 +9,6 @@ import time
 from std_msgs.msg import String, Int64
 from robotinfo_msgs.msg import User_msg
 
-
 class Result(object):
     def __init__(self):
         """
