@@ -251,8 +251,6 @@ class Game():
                 self.last_shot_time = self.current_time
 
         
-
-        
     def show_level_screen(self):
         self.screen.fill(self.BLACK)
         self.level_text = self.font.render(f"Level {self.current_level}", True, self.WHITE)
@@ -263,14 +261,6 @@ class Game():
 
         self.waiting = True
         while self.waiting:
-            '''
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.waiting = False
-            '''
 
     def increase_difficulty(self):
         # global enemy_speed, ENEMY_SPAWN_RATE, big_enemy_speed, BIG_ENEMY_SPAWN_RATE
@@ -399,26 +389,6 @@ class Game():
             if self.quit:
                 return False
 
-            '''
-            for self.event in pygame.event.get():
-                if self.event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if self.event.type == pygame.KEYDOWN:
-                    if self.event.key == pygame.K_r:
-                        pygame.mixer.music.load('background_music.mp3')  
-                        pygame.mixer.music.play(-1)  # Restart background music
-                        # Enemy setup
-                        self.enemy_speed = 1.5  # Reduced from 2 to make the game easier
-                        self.ENEMY_SPAWN_RATE = 180
-                        # Big enemy setup
-                        self.big_enemy_speed = 1
-                        self.BIG_ENEMY_SPAWN_RATE = 600
-                        return True
-                    elif self.event.key == pygame.K_q:
-                        return False
-            '''
-
     def show_welcome_screen(self, player):
         # Start playing background music
         pygame.mixer.music.play(-1)  # -1 means loop indefinitely
@@ -432,14 +402,6 @@ class Game():
 
         self.waiting = True
         while self.waiting:
-            '''
-            for self.event in pygame.event.get():
-                if self.event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if self.event.type == pygame.KEYDOWN:
-                    self.waiting = False
-            '''
                     
     def show_end_screen(self):
         pygame.mixer.music.stop()
