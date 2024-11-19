@@ -136,10 +136,13 @@ class Game():
         self.current_level
 
         # self.end_image
+        self.waiting_decision = True
+        self.retry = False
+        self.quit = False
 
     def game(self, player):
 
-        rospy.loginfo("Game phase started!")
+        rospy.loginfo("Zombies Warrior started!")
 
         pygame.display.set_caption("Zombies Warrior")
         # Initialize the mixer
@@ -152,6 +155,7 @@ class Game():
         pygame.mixer.music.set_volume(0.1)  # Adjust this value to decrease volume as needed
 
         self.show_welcome_screen(player)
+        rospy.loginfo("Game phase started!")
         while self.game_loop():
             pass
 
@@ -176,17 +180,25 @@ class Game():
         self.__pub_score.publish(self.score)
 
     def control(self, msg):
+        self.waiting = False
+
         data = msg.data
-        rospy.loginfo(f"{data} actions recieved!")
+        # rospy.loginfo(f"{data} actions recieved!")
 
         actions = data.split(',')
     
         movement = ""
         shoot_direction = ""
+        decision = ""
 
-        if len(actions) == 2:
-            movement, shoot_direction = actions
-            rospy.loginfo(f"Movement: {movement}, Shooting Direction: {shoot_direction}")
+        if len(actions) == 3:
+            movement, shoot_direction, decision = actions
+            # rospy.loginfo(f"Movement: {movement}, Shooting Direction: {shoot_direction}")
+
+        if decision == "R":
+            self.retry = True
+        elif decision == "Q":
+            self.quit = True
 
         if movement == "LEFT":
             self.player_x = max(0, self.player_x - self.player_speed)
@@ -239,6 +251,8 @@ class Game():
                 self.last_shot_time = self.current_time
 
         
+
+        
     def show_level_screen(self):
         self.screen.fill(self.BLACK)
         self.level_text = self.font.render(f"Level {self.current_level}", True, self.WHITE)
@@ -249,12 +263,14 @@ class Game():
 
         self.waiting = True
         while self.waiting:
+            '''
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     self.waiting = False
+            '''
 
     def increase_difficulty(self):
         # global enemy_speed, ENEMY_SPAWN_RATE, big_enemy_speed, BIG_ENEMY_SPAWN_RATE
@@ -366,8 +382,24 @@ class Game():
         self.screen.blit(self.restart_text, (self.WIDTH//2 - self.restart_text.get_width()//2, self.HEIGHT//2 + 50))
         pygame.display.flip()
 
-        self.waiting = True
-        while self.waiting:
+        self.waiting_decision = True
+        self.retry = False
+        self.quit = False
+        while self.waiting_decision:
+            if self.retry:
+                pygame.mixer.music.load('background_music.mp3')  
+                pygame.mixer.music.play(-1)  # Restart background music
+                # Enemy setup
+                self.enemy_speed = 1.5  # Reduced from 2 to make the game easier
+                self.ENEMY_SPAWN_RATE = 180
+                # Big enemy setup
+                self.big_enemy_speed = 1
+                self.BIG_ENEMY_SPAWN_RATE = 600
+                return True
+            if self.quit:
+                return False
+
+            '''
             for self.event in pygame.event.get():
                 if self.event.type == pygame.QUIT:
                     pygame.quit()
@@ -385,6 +417,7 @@ class Game():
                         return True
                     elif self.event.key == pygame.K_q:
                         return False
+            '''
 
     def show_welcome_screen(self, player):
         # Start playing background music
@@ -399,12 +432,14 @@ class Game():
 
         self.waiting = True
         while self.waiting:
+            '''
             for self.event in pygame.event.get():
                 if self.event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if self.event.type == pygame.KEYDOWN:
                     self.waiting = False
+            '''
                     
     def show_end_screen(self):
         pygame.mixer.music.stop()
