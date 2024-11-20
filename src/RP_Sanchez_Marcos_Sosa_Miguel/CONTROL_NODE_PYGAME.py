@@ -38,7 +38,9 @@ class Control_Pygame(object):
             pygame.K_w: False,   # W key for up
             pygame.K_a: False,   # A key for left
             pygame.K_s: False,   # S key for down
-            pygame.K_d: False    # D key for right
+            pygame.K_d: False,    # D key for right
+            pygame.K_r: False,  # Retry
+            pygame.K_q: False   # Quit
         }
 
         while not rospy.is_shutdown():
@@ -46,6 +48,7 @@ class Control_Pygame(object):
             
             move = ""
             shoot = ""
+            decision = ""
             
             # Loop through all events
             for event in pygame.event.get():
@@ -66,6 +69,10 @@ class Control_Pygame(object):
                         keys_state[pygame.K_s] = True
                     elif event.key == pygame.K_d:
                         keys_state[pygame.K_d] = True
+                    elif event.key == pygame.K_r:
+                        keys_state[pygame.K_r] = True
+                    elif event.key == pygame.K_q:
+                        keys_state[pygame.K_q] = True
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         keys_state[pygame.K_LEFT] = False
@@ -83,6 +90,10 @@ class Control_Pygame(object):
                         keys_state[pygame.K_s] = False
                     elif event.key == pygame.K_d:
                         keys_state[pygame.K_d] = False
+                    elif event.key == pygame.K_r:
+                        keys_state[pygame.K_r] = False
+                    elif event.key == pygame.K_q:
+                        keys_state[pygame.K_q] = False
 
             # Check for diagonal movement combinations
             if keys_state[pygame.K_LEFT] and keys_state[pygame.K_UP]:
@@ -120,9 +131,15 @@ class Control_Pygame(object):
                 shoot = "S"
             elif keys_state[pygame.K_d]:
                 shoot = "D"
+
+            if keys_state[pygame.K_r]:
+                decision = "R"
+            elif keys_state[pygame.K_q]:
+                decision = "Q"
+
             # If an action is determined, publish it
-            if move or shoot:
-                action = f"{move},{shoot}"
+            if move or shoot or decision:
+                action = f"{move},{shoot},{decision}"
                 rospy.loginfo(f"Publishing {action} from keyboard...")
                 self.__pub_control_pygame.publish(action)   
 
