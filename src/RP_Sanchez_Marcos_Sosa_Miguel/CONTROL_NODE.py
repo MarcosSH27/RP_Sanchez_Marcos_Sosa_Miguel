@@ -1,91 +1,92 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import roslib
-import rospy
-import rospkg
 from std_msgs.msg import String
-from pynput import keyboard
+import rospy
+import curses
+from std_msgs.msg import String
 
-
-class ControlNode:
+class GameControlNode:
     def __init__(self):
-        """
-        Initializes the control node, which listens to keyboard inputs and sends control commands.
-        """
-        # Publisher for sending control commands
-        self._pub_control = rospy.Publisher("keyboard_control", String, queue_size=10)
+        # Initialize ROS node
+        rospy.init_node('game_control_node')
 
-        # Initialize movement and shooting directions
-        self.movement = ""
-        self.shoot_direction = ""
+        # Publisher to send control commands to the game
+        self.__pub_control = rospy.Publisher('keyboard_control', String, queue_size=10)
 
-        # Key mappings for movement and shooting
-        self.movement_keys = {
-            keyboard.Key.up: "UP",
-            keyboard.Key.down: "DOWN",
-            keyboard.Key.left: "LEFT",
-            keyboard.Key.right: "RIGHT",
-        }
-        self.shooting_keys = {
-            "w": "W",
-            "a": "A",
-            "s": "S",
-            "d": "D",
-        }
+        # Initialize the control state
+        self.running = True
 
-        rospy.loginfo("Control node initialized. Use the arrow keys for movement and W, A, S, D for shooting.")
+    def get_control_message(self, key):
+        """Converts key press into a movement and shooting direction."""
+        movement = ""
+        shoot_direction = ""
 
-    def on_press(self, key):
-        """
-        Handles key press events.
-        """
-        try:
-            # Handle movement keys
-            if key in self.movement_keys:
-                self.movement = self.movement_keys[key]
-            
-            # Handle shooting keys
-            elif hasattr(key, "char") and key.char in self.shooting_keys:
-                self.shoot_direction = self.shooting_keys[key.char]
+        if key == ord('q'):  # Quit
+            self.running = False
+        elif key == curses.KEY_LEFT:
+            movement = 'LEFT'
+        elif key == curses.KEY_RIGHT:
+            movement = 'RIGHT'
+        elif key == curses.KEY_UP:
+            movement = 'UP'
+        elif key == curses.KEY_DOWN:
+            movement = 'DOWN'
+        elif key == ord('j'):
+            movement = 'DOWN_LEFT'
+        elif key == ord('l'):
+            movement = 'DOWN_RIGHT'
+        elif key == ord('u'):
+            movement = 'UP_LEFT'
+        elif key == ord('o'):
+            movement = 'UP_RIGHT'
+        elif key == ord('w'):  # Shoot Up
+            shoot_direction = 'W'
+        elif key == ord('s'):  # Shoot Down
+            shoot_direction = 'S'
+        elif key == ord('a'):  # Shoot Left
+            shoot_direction = 'A'
+        elif key == ord('d'):  # Shoot Right
+            shoot_direction = 'D'
 
-            # Publish command if both movement and shooting direction are set
-            if self.movement and self.shoot_direction:
-                action = f"{self.movement},{self.shoot_direction}"
-                self.control_pub.publish(action)
-                rospy.loginfo(f"Published command: {action}")
+        # Return combined action string for movement and shooting
+        return f"{movement},{shoot_direction}"
 
-        except Exception as e:
-            rospy.logerr(f"Error in on_press: {e}")
+    def run(self, stdscr):
+        # Set up curses window
+        curses.curs_set(0)  # Hide the cursor
+        stdscr.nodelay(1)   # Non-blocking input
+        stdscr.timeout(100)  # Set the screen refresh timeout
 
-    def on_release(self, key):
-        """
-        Handles key release events.
-        """
-        # Reset movement or shooting direction on key release
-        if key in self.movement_keys:
-            self.movement = None
-        elif hasattr(key, "char") and key.char in self.shooting_keys:
-            self.shoot_direction = None
+        while self.running:
+            key = stdscr.getch()  # Get user input
 
-    def start_listening(self):
-        """
-        Starts the keyboard listener.
-        """
-        # Listen to keyboard events in a separate thread
-        with keyboard.Listener(on_press=self.on_press, on_release=self.on_release) as listener:
-            rospy.loginfo("Keyboard listener started.")
-            rospy.spin()  # Keep the node running
-            listener.join()  # Wait for the listener to stop
+            if key == -1:
+                continue  # No key pressed, continue looping
 
-if __name__ == "__main__":
+            # Convert key press into control message
+            control_msg = self.get_control_message(key)
+
+            # If there is any control message to publish
+            if control_msg:
+                self.__pub_control.publish(control_msg)
+
+            # Check if 'q' is pressed to quit the program
+            if key == ord('q'):
+                self.running = False
+
+        curses.endwin()  # End curses mode
+
+if __name__ == '__main__':
     try:
-        # Initialize the ROS node
-        rospy.init_node("control_node", anonymous=True)
+        # Create GameControlNode instance and run the control loop
+        node = GameControlNode()
+        
+        # Start curses and run the game control loop
+        curses.wrapper(node.run)
 
-        # Create an instance of the ControlNode
-        node = ControlNode()
-
-        # Start listening for keyboard inputs
-        node.start_listening()
+        # Keep the node running until it is shut down
+        rospy.spin()
 
     except rospy.ROSInterruptException:
-        rospy.loginfo("Control node shutting down.")
+        pass
