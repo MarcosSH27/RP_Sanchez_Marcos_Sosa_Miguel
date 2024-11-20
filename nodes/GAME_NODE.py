@@ -34,6 +34,8 @@ class Game():
 
         self.__sub_control_pygame = rospy.Subscriber("keyboard_control", String, self.control)
 
+        self.__sub_control = rospy.Subscriber("keyboard_control", String, self.control)
+
         # Screen setup
         self.WIDTH = 800 
         self.HEIGHT = 600
