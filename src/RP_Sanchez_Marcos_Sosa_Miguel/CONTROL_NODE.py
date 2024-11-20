@@ -128,7 +128,7 @@ class ControlPynput:
                 rospy.loginfo(f"Publishing {action} from keyboard...")
                 self.__pub_control.publish(action)
 
-            time.sleep(0.02)
+            time.sleep(0.01)
 
 
 if __name__ == "__main__":
