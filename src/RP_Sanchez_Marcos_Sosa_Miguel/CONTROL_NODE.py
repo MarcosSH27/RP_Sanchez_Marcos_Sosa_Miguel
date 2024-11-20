@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+import roslib
 import rospy
+import rospkg
 from std_msgs.msg import String
 from pynput import keyboard
+
 
 class ControlNode:
     def __init__(self):
@@ -12,8 +15,8 @@ class ControlNode:
         self._pub_control = rospy.Publisher("keyboard_control", String, queue_size=10)
 
         # Initialize movement and shooting directions
-        self.movement = None
-        self.shoot_direction = None
+        self.movement = ""
+        self.shoot_direction = ""
 
         # Key mappings for movement and shooting
         self.movement_keys = {
@@ -46,9 +49,9 @@ class ControlNode:
 
             # Publish command if both movement and shooting direction are set
             if self.movement and self.shoot_direction:
-                command = f"{self.movement},{self.shoot_direction}"
-                self.control_pub.publish(command)
-                rospy.loginfo(f"Published command: {command}")
+                action = f"{self.movement},{self.shoot_direction}"
+                self.control_pub.publish(action)
+                rospy.loginfo(f"Published command: {action}")
 
         except Exception as e:
             rospy.logerr(f"Error in on_press: {e}")
