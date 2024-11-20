@@ -259,8 +259,10 @@ class Game():
         self.screen.blit(self.continue_text, (self.WIDTH//2 - self.continue_text.get_width()//2, self.HEIGHT//2 + 50))
         pygame.display.flip()
 
+        time.sleep(0.5)
         self.waiting = True
         while self.waiting:
+            pass
 
     def increase_difficulty(self):
         # global enemy_speed, ENEMY_SPAWN_RATE, big_enemy_speed, BIG_ENEMY_SPAWN_RATE
@@ -372,6 +374,7 @@ class Game():
         self.screen.blit(self.restart_text, (self.WIDTH//2 - self.restart_text.get_width()//2, self.HEIGHT//2 + 50))
         pygame.display.flip()
 
+        time.sleep(0.5)
         self.waiting_decision = True
         self.retry = False
         self.quit = False
@@ -400,8 +403,10 @@ class Game():
         self.screen.blit(self.start_text, (self.WIDTH//2 - self.start_text.get_width()//2, self.HEIGHT//2 + 260))
         pygame.display.flip()
 
+        time.sleep(0.5)
         self.waiting = True
         while self.waiting:
+            pass
                     
     def show_end_screen(self):
         pygame.mixer.music.stop()
