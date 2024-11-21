@@ -1,82 +1,141 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-import keyboard
+from pynput import keyboard
 import rospy
 from std_msgs.msg import String
 import time
 
-
-class ControlKeyboard:
+class ControlPynput:
     def __init__(self):
-        self.__pub_control_keyboard = rospy.Publisher("keyboard_control", String, queue_size=10)
+        self.__pub_control = rospy.Publisher("keyboard_control", String, queue_size=10)
+        self.keys_state = {
+            "LEFT": False,
+            "RIGHT": False,
+            "UP": False,
+            "DOWN": False,
+            "W": False,
+            "A": False,
+            "S": False,
+            "D": False,
+            "R": False,
+            "Q": False,
+        }
+        self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
+        self.listener.start()
         self.main()
 
-    def main(self):
-        rospy.loginfo("Press 'q' to quit.")
+    def on_press(self, key):
+        try:
+            if key == keyboard.Key.left:
+                self.keys_state["LEFT"] = True
+            elif key == keyboard.Key.right:
+                self.keys_state["RIGHT"] = True
+            elif key == keyboard.Key.up:
+                self.keys_state["UP"] = True
+            elif key == keyboard.Key.down:
+                self.keys_state["DOWN"] = True
+            elif key.char == "w":
+                self.keys_state["W"] = True
+            elif key.char == "a":
+                self.keys_state["A"] = True
+            elif key.char == "s":
+                self.keys_state["S"] = True
+            elif key.char == "d":
+                self.keys_state["D"] = True
+            elif key.char == "r":
+                self.keys_state["R"] = True
+            elif key.char == "q":
+                self.keys_state["Q"] = True
+        except AttributeError:
+            pass
 
+    def on_release(self, key):
+        try:
+            if key == keyboard.Key.left:
+                self.keys_state["LEFT"] = False
+            elif key == keyboard.Key.right:
+                self.keys_state["RIGHT"] = False
+            elif key == keyboard.Key.up:
+                self.keys_state["UP"] = False
+            elif key == keyboard.Key.down:
+                self.keys_state["DOWN"] = False
+            elif key.char == "w":
+                self.keys_state["W"] = False
+            elif key.char == "a":
+                self.keys_state["A"] = False
+            elif key.char == "s":
+                self.keys_state["S"] = False
+            elif key.char == "d":
+                self.keys_state["D"] = False
+            elif key.char == "r":
+                self.keys_state["R"] = False
+            elif key.char == "q":
+                self.keys_state["Q"] = False
+        except AttributeError:
+            pass
+
+    def main(self):
         while not rospy.is_shutdown():
             move = ""
             shoot = ""
             decision = ""
 
-            # Check movement keys
-            if keyboard.is_pressed("left") and keyboard.is_pressed("up"):
+            # Process movement
+            if self.keys_state["LEFT"] and self.keys_state["UP"]:
                 move = "UP_LEFT"
-            elif keyboard.is_pressed("left") and keyboard.is_pressed("down"):
+            elif self.keys_state["LEFT"] and self.keys_state["DOWN"]:
                 move = "DOWN_LEFT"
-            elif keyboard.is_pressed("right") and keyboard.is_pressed("up"):
+            elif self.keys_state["RIGHT"] and self.keys_state["UP"]:
                 move = "UP_RIGHT"
-            elif keyboard.is_pressed("right") and keyboard.is_pressed("down"):
+            elif self.keys_state["RIGHT"] and self.keys_state["DOWN"]:
                 move = "DOWN_RIGHT"
-            elif keyboard.is_pressed("left"):
+            elif self.keys_state["LEFT"]:
                 move = "LEFT"
-            elif keyboard.is_pressed("right"):
+            elif self.keys_state["RIGHT"]:
                 move = "RIGHT"
-            elif keyboard.is_pressed("up"):
+            elif self.keys_state["UP"]:
                 move = "UP"
-            elif keyboard.is_pressed("down"):
+            elif self.keys_state["DOWN"]:
                 move = "DOWN"
 
-            # Check shooting keys (WASD)
-            if keyboard.is_pressed("w") and keyboard.is_pressed("a"):
+            # Process shooting
+            if self.keys_state["W"] and self.keys_state["A"]:
                 shoot = "W_A"
-            elif keyboard.is_pressed("w") and keyboard.is_pressed("d"):
+            elif self.keys_state["W"] and self.keys_state["D"]:
                 shoot = "W_D"
-            elif keyboard.is_pressed("s") and keyboard.is_pressed("a"):
+            elif self.keys_state["S"] and self.keys_state["A"]:
                 shoot = "S_A"
-            elif keyboard.is_pressed("s") and keyboard.is_pressed("d"):
+            elif self.keys_state["S"] and self.keys_state["D"]:
                 shoot = "S_D"
-            elif keyboard.is_pressed("w"):
+            elif self.keys_state["W"]:
                 shoot = "W"
-            elif keyboard.is_pressed("a"):
+            elif self.keys_state["A"]:
                 shoot = "A"
-            elif keyboard.is_pressed("s"):
+            elif self.keys_state["S"]:
                 shoot = "S"
-            elif keyboard.is_pressed("d"):
+            elif self.keys_state["D"]:
                 shoot = "D"
 
-            # Check decision keys
-            if keyboard.is_pressed("r"):
+            # Process decisions
+            if self.keys_state["R"]:
                 decision = "R"
-            elif keyboard.is_pressed("q"):
-                decision = "Q"
+            elif self.keys_state["Q"]:
                 rospy.loginfo("Exiting...")
                 break
 
-            # If an action is determined, publish it
             if move or shoot or decision:
                 action = f"{move},{shoot},{decision}"
                 rospy.loginfo(f"Publishing {action} from keyboard...")
-                self.__pub_control_keyboard.publish(action)
+                self.__pub_control.publish(action)
 
             time.sleep(0.01)
 
 
 if __name__ == "__main__":
     try:
-        rospy.init_node("control_node_keyboard")
+        rospy.init_node("control_node")
         rospy.loginfo("The node has started")
 
-        ControlKeyboard()
+        ControlPynput()
     except rospy.ROSInterruptException:
         pass
