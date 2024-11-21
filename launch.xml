@@ -1,0 +1,7 @@
+<launch>
+    <node name = "info_user" pkg = "RP_Sanchez_Marcos_Sosa_Miguel" type = "INFO_USER.py" output = "screen"/>
+    <node name = "results" pkg = "RP_Sanchez_Marcos_Sosa_Miguel" type = "RESULT_NODE.py" output = "screen"/>
+    <node name = "game" pkg = "RP_Sanchez_Marcos_Sosa_Miguel" type = "GAME_NODE.py" output = "screen"/>
+    <node name = "control_node" pkg = "RP_Sanchez_Marcos_Sosa_Miguel" type = "CONTROL_NODE.py" output = "screen"/>
+    <node name = "control_node_pygame" pkg = "RP_Sanchez_Marcos_Sosa_Miguel" type = "CONTROL_NODE_PYGAME.py" output = "screen"/>
+</launch>
