@@ -112,7 +112,7 @@ class Game():
 
         # Level variables
         self.current_level = 1
-        self.POINTS_PER_LEVEL = 20
+        self.POINTS_PER_LEVEL = 200
 
         self.waiting = True
 
