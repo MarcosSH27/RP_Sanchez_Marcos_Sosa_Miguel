@@ -16,7 +16,7 @@ import pygame
 import math
 
 from std_msgs.msg import String, Int64
-from robotinfo_msgs.msg import User_msg
+from RP_Sanchez_Marcos_Sosa_Miguel.msg import User_msg
 
 # Initialize pygame
 pygame.init()
