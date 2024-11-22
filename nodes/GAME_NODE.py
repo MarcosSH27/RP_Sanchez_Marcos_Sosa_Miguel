@@ -398,7 +398,7 @@ class Game():
         
         self.screen.blit(self.background_image, (0, 0))
         # welcome_text = font.render("Welcome to Zombies Warrior", True, WHITE)
-        self.start_text = self.font.render(f"Welcome {player.name}! Press any key to start", True, self.WHITE)
+        self.start_text = self.font.render(f"Welcome {player.username}! Press any key to start", True, self.WHITE)
         # screen.blit(welcome_text, (WIDTH//2 - welcome_text.get_width()//2, HEIGHT//2 - 50))
         self.screen.blit(self.start_text, (self.WIDTH//2 - self.start_text.get_width()//2, self.HEIGHT//2 + 260))
         pygame.display.flip()
