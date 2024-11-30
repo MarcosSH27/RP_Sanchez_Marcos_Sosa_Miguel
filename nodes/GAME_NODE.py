@@ -421,19 +421,15 @@ class Game():
             pass
     
     def choose_difficulty(self):
-        self.difficulty = "normal"
         self.difficulty_multiplier = 1.0  # Default difficulty multiplier for normal difficulty
 
-        self.screen.blit(self.difficulty_screen, (0, 0))
+        self.screen.fill(self.BLACK)
         self.difficulty_text = self.font.render("Choose Difficulty:", True, self.WHITE)
-        self.easy_text = self.font.render("  Easy (E)  ", True, self.WHITE)
-        self.normal_text = self.font.render("  Normal (N)  ", True, self.WHITE)
-        self.hard_text = self.font.render("  Hard (H)  ", True, self.WHITE)
+        self.options_text = self.font.render("  Easy (E)  Normal (N)  Hard (H)  ", True, self.WHITE)
 
         self.screen.blit(self.difficulty_text, (self.WIDTH // 2 - self.difficulty_text.get_width() // 2, self.HEIGHT // 2 - 100))
-        self.screen.blit(self.easy_text, (self.WIDTH // 2 - self.easy_text.get_width() // 2 - 100, self.HEIGHT // 2))
-        self.screen.blit(self.normal_text, (self.WIDTH // 2 - self.normal_text.get_width() // 2, self.HEIGHT // 2))
-        self.screen.blit(self.hard_text, (self.WIDTH // 2 - self.hard_text.get_width() // 2 + 100, self.HEIGHT // 2))
+        self.screen.blit(self.options_text, (self.WIDTH // 2 - self.options_text.get_width() // 2 - 100, self.HEIGHT // 2))
+
 
         pygame.display.flip()
 
