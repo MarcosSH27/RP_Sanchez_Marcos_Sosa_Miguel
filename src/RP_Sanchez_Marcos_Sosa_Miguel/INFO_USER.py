@@ -7,7 +7,8 @@ import rospkg
 import time
 
 from std_msgs.msg import String, Int64
-from robotinfo_msgs.msg import User_msg
+# from robotinfo_msgs.msg import User_msg
+from RP_Sanchez_Marcos_Sosa_Miguel.msg import User_msg
 
 class Infouser(object):
     def __init__(self):
