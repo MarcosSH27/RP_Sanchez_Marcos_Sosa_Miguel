@@ -19,6 +19,9 @@ class ControlPynput:
             "D": False,
             "R": False,
             "Q": False,
+            "E": False,
+            "N": False,
+            "H": False,
         }
         self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
@@ -46,6 +49,12 @@ class ControlPynput:
                 self.keys_state["R"] = True
             elif key.char == "q":
                 self.keys_state["Q"] = True
+            elif key.char == "e":
+                self.keys_state["E"] = True
+            elif key.char == "n":
+                self.keys_state["N"] = True
+            elif key.char == "h":
+                self.keys_state["H"] = True
         except AttributeError:
             pass
 
