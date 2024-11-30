@@ -134,6 +134,7 @@ class Game():
         self.power_up_timer
         self.power_up_pos 
         self.last_shot_time 
+        self.difficulty_multiplier
         # self.ENEMY_SPAWN_RATE 
         self.current_level
 
@@ -157,6 +158,7 @@ class Game():
         pygame.mixer.music.set_volume(0.1)  # Adjust this value to decrease volume as needed
 
         self.show_welcome_screen(player)
+        self.choose_difficulty()
         rospy.loginfo("Game phase started!")
         while self.game_loop():
             pass
@@ -201,8 +203,13 @@ class Game():
             self.retry = True
         elif decision == "Q":
             self.quit = True
-
-        if movement == "LEFT":
+        elif decision == "E":
+            self.difficulty_multiplier = 0.75
+        elif decision == "N":
+            self.difficulty_multiplier = 1
+        elif decision == "H":
+            self.difficulty_multiplier = 1.25 
+        elif movement == "LEFT":
             self.player_x = max(0, self.player_x - self.player_speed)
         elif movement == "RIGHT":
             self.player_x = min(self.WIDTH - self.player_size, self.player_x + self.player_speed)
@@ -409,7 +416,29 @@ class Game():
         self.waiting = True
         while self.waiting:
             pass
-                    
+    
+    def choose_difficulty(self):
+        self.difficulty = "normal"
+        self.difficulty_multiplier = 1.0  # Default difficulty multiplier for normal difficulty
+
+        self.difficulty_text = self.font.render("Choose Difficulty:", True, self.WHITE)
+        self.easy_text = self.font.render("Easy (E)", True, self.WHITE)
+        self.normal_text = self.font.render("Normal(N)", True, self.WHITE)
+        self.hard_text = self.font.render("Hard(H)", True, self.WHITE)
+
+        self.screen.blit(self.difficulty_text, (self.WIDTH // 2 - self.difficulty_text.get_width() // 2, self.HEIGHT // 2 - 100))
+        self.screen.blit(self.easy_text, (self.WIDTH // 2 - self.easy_text.get_width() // 2 - 100, self.HEIGHT // 2))
+        self.screen.blit(self.normal_text, (self.WIDTH // 2 - self.normal_text.get_width() // 2, self.HEIGHT // 2))
+        self.screen.blit(self.hard_text, (self.WIDTH // 2 - self.hard_text.get_width() // 2 + 100, self.HEIGHT // 2))
+
+        pygame.display.flip()
+
+        time.sleep(0.5)
+        self.waiting = True
+        while self.waiting:
+            pass
+
+
     def show_end_screen(self):
         pygame.mixer.music.stop()
         pygame.mixer.music.load(os.path.join(self.current_dir, "end.mp3"))
@@ -442,7 +471,7 @@ class Game():
         self.enemies = []
         self.big_enemies = []
         self.bullets = []
-        self.enemy_speed = 1.5
+        self.enemy_speed = 1.5 * self.difficulty_multiplier
         self.power_up_timer = 0
         self.power_up_pos = None
         self.last_shot_time = 0
@@ -540,7 +569,7 @@ class Game():
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load(os.path.join(self.current_dir, "final_boss.mp3"))
                     pygame.mixer.music.play(-1)
-                    self.enemy_speed = 3
+                    self.enemy_speed = 3 * self.difficulty_multiplier
                     
                 elif self.current_level < 6:
                     self.enemies = []  # Clear all enemies on level up
