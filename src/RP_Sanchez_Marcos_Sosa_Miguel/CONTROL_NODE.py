@@ -122,6 +122,12 @@ class ControlPynput:
             elif self.keys_state["Q"]:
                 rospy.loginfo("Exiting...")
                 break
+            elif self.keys_state["E"]:
+                decision = "E"
+            elif self.keys_state["N"]:
+                decision = "N"
+            elif self.keys_state["H"]:
+                decision = "H"
 
             if move or shoot or decision:
                 action = f"{move},{shoot},{decision}"

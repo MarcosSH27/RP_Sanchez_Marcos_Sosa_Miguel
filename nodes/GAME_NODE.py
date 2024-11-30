@@ -426,9 +426,9 @@ class Game():
 
         self.screen.blit(self.difficulty_screen, (0, 0))
         self.difficulty_text = self.font.render("Choose Difficulty:", True, self.WHITE)
-        self.easy_text = self.font.render("Easy (E) ", True, self.WHITE)
-        self.normal_text = self.font.render("Normal(N)", True, self.WHITE)
-        self.hard_text = self.font.render(" Hard(H)", True, self.WHITE)
+        self.easy_text = self.font.render("  Easy (E)  ", True, self.WHITE)
+        self.normal_text = self.font.render("  Normal (N)  ", True, self.WHITE)
+        self.hard_text = self.font.render("  Hard (H)  ", True, self.WHITE)
 
         self.screen.blit(self.difficulty_text, (self.WIDTH // 2 - self.difficulty_text.get_width() // 2, self.HEIGHT // 2 - 100))
         self.screen.blit(self.easy_text, (self.WIDTH // 2 - self.easy_text.get_width() // 2 - 100, self.HEIGHT // 2))
