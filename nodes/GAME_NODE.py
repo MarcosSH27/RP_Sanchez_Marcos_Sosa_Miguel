@@ -112,6 +112,9 @@ class Game():
         self.title_screen = pygame.image.load(os.path.join(self.current_dir, "screen.png"))
         self.title_screen = pygame.transform.scale(self.title_screen, (self.WIDTH, self.HEIGHT))
 
+        self.difficulty_screen = pygame.image.load(os.path.join(self.current_dir, "difficulty_screen.png"))
+        self.difficulty_screen = pygame.transform.scale(self.title_screen, (self.WIDTH, self.HEIGHT))
+
         # Level variables
         self.current_level = 1
         self.POINTS_PER_LEVEL = 200
@@ -421,7 +424,7 @@ class Game():
         self.difficulty = "normal"
         self.difficulty_multiplier = 1.0  # Default difficulty multiplier for normal difficulty
 
-        self.screen.blit(self.difficulty_screen.png, (0, 0))
+        self.screen.blit(self.difficulty_screen, (0, 0))
         self.difficulty_text = self.font.render("Choose Difficulty:", True, self.WHITE)
         self.easy_text = self.font.render("Easy (E) ", True, self.WHITE)
         self.normal_text = self.font.render("Normal(N)", True, self.WHITE)
