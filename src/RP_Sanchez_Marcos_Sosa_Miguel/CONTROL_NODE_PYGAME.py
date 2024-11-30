@@ -40,7 +40,10 @@ class Control_Pygame(object):
             pygame.K_s: False,   # S key for down
             pygame.K_d: False,    # D key for right
             pygame.K_r: False,  # Retry
-            pygame.K_q: False   # Quit
+            pygame.K_q: False,   # Quit
+            pygame.K_e: False,
+            pygame.K_n: False,
+            pygame.K_h: False
         }
 
         while not rospy.is_shutdown():
@@ -73,6 +76,12 @@ class Control_Pygame(object):
                         keys_state[pygame.K_r] = True
                     elif event.key == pygame.K_q:
                         keys_state[pygame.K_q] = True
+                    elif event.key == pygame.K_e:
+                        keys_state[pygame.K_e] = True
+                    elif event.key == pygame.K_n:
+                        keys_state[pygame.K_n] = True
+                    elif event.key == pygame.K_h:
+                        keys_state[pygame.K_h] = True
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         keys_state[pygame.K_LEFT] = False
@@ -94,6 +103,12 @@ class Control_Pygame(object):
                         keys_state[pygame.K_r] = False
                     elif event.key == pygame.K_q:
                         keys_state[pygame.K_q] = False
+                    elif event.key == pygame.K_e:
+                        keys_state[pygame.K_e] = False
+                    elif event.key == pygame.K_n:
+                        keys_state[pygame.K_n] = False
+                    elif event.key == pygame.K_h:
+                        keys_state[pygame.K_h] = False
 
             # Check for diagonal movement combinations
             if keys_state[pygame.K_LEFT] and keys_state[pygame.K_UP]:
@@ -136,6 +151,12 @@ class Control_Pygame(object):
                 decision = "R"
             elif keys_state[pygame.K_q]:
                 decision = "Q"
+            elif keys_state[pygame.K_e]:
+                decision = "E"
+            elif keys_state[pygame.K_n]:
+                decision = "N"
+            elif keys_state[pygame.K_h]:
+                decision = "H"
 
             # If an action is determined, publish it
             if move or shoot or decision:
