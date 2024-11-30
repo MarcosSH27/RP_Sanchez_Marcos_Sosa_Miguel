@@ -136,8 +136,6 @@ class ControlPynput:
                 decision = "R"
             elif self.keys_state["Q"]:
                 decision = "Q"
-                rospy.loginfo("Exiting...")
-                break
             elif self.keys_state["E"]:
                 decision = "E"
             elif self.keys_state["N"]:
