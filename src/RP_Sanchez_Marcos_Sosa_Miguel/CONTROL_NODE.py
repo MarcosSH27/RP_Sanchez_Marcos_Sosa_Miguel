@@ -71,6 +71,12 @@ class ControlPynput:
                 self.keys_state["R"] = False
             elif key.char == "q":
                 self.keys_state["Q"] = False
+            elif key.char == "e":
+                self.keys_state["E"] = False
+            elif key.char == "n":
+                self.keys_state["N"] = False
+            elif key.char == "h":
+                self.keys_state["H"] = False
         except AttributeError:
             pass
 
