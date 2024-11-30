@@ -42,7 +42,7 @@ class Control_Pygame(object):
             pygame.K_r: False,  # Retry
             pygame.K_q: False,   # Quit
             pygame.K_e: False,
-            pygame.K_n: False,
+            pygame.K_m: False,
             pygame.K_h: False
         }
 
@@ -78,8 +78,8 @@ class Control_Pygame(object):
                         keys_state[pygame.K_q] = True
                     elif event.key == pygame.K_e:
                         keys_state[pygame.K_e] = True
-                    elif event.key == pygame.K_n:
-                        keys_state[pygame.K_n] = True
+                    elif event.key == pygame.K_m:
+                        keys_state[pygame.K_m] = True
                     elif event.key == pygame.K_h:
                         keys_state[pygame.K_h] = True
                 elif event.type == pygame.KEYUP:
@@ -105,8 +105,8 @@ class Control_Pygame(object):
                         keys_state[pygame.K_q] = False
                     elif event.key == pygame.K_e:
                         keys_state[pygame.K_e] = False
-                    elif event.key == pygame.K_n:
-                        keys_state[pygame.K_n] = False
+                    elif event.key == pygame.K_m:
+                        keys_state[pygame.K_m] = False
                     elif event.key == pygame.K_h:
                         keys_state[pygame.K_h] = False
 
@@ -153,8 +153,8 @@ class Control_Pygame(object):
                 decision = "Q"
             elif keys_state[pygame.K_e]:
                 decision = "E"
-            elif keys_state[pygame.K_n]:
-                decision = "N"
+            elif keys_state[pygame.K_m]:
+                decision = "M"
             elif keys_state[pygame.K_h]:
                 decision = "H"
 

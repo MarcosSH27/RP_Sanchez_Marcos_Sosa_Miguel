@@ -112,12 +112,9 @@ class Game():
         self.title_screen = pygame.image.load(os.path.join(self.current_dir, "screen.png"))
         self.title_screen = pygame.transform.scale(self.title_screen, (self.WIDTH, self.HEIGHT))
 
-        self.difficulty_screen = pygame.image.load(os.path.join(self.current_dir, "difficulty_screen.png"))
-        self.difficulty_screen = pygame.transform.scale(self.title_screen, (self.WIDTH, self.HEIGHT))
-
         # Level variables
         self.current_level = 1
-        self.POINTS_PER_LEVEL = 200
+        self.POINTS_PER_LEVEL = 20
 
         self.waiting = True
 
@@ -207,11 +204,11 @@ class Game():
         elif decision == "Q":
             self.quit = True
         elif decision == "E":
-            self.difficulty_multiplier = 0.75
-        elif decision == "N":
+            self.difficulty_multiplier = 0.5
+        elif decision == "M":
             self.difficulty_multiplier = 1
         elif decision == "H":
-            self.difficulty_multiplier = 1.25 
+            self.difficulty_multiplier = 2 
         elif movement == "LEFT":
             self.player_x = max(0, self.player_x - self.player_speed)
         elif movement == "RIGHT":
@@ -425,10 +422,10 @@ class Game():
 
         self.screen.fill(self.BLACK)
         self.difficulty_text = self.font.render("Choose Difficulty:", True, self.WHITE)
-        self.options_text = self.font.render("  Easy (E)  Normal (N)  Hard (H)  ", True, self.WHITE)
+        self.options_text = self.font.render("  Easy (E)  Medium (M)  Hard (H)  ", True, self.WHITE)
 
         self.screen.blit(self.difficulty_text, (self.WIDTH // 2 - self.difficulty_text.get_width() // 2, self.HEIGHT // 2 - 100))
-        self.screen.blit(self.options_text, (self.WIDTH // 2 - self.options_text.get_width() // 2 - 100, self.HEIGHT // 2))
+        self.screen.blit(self.options_text, (self.WIDTH // 2 - self.options_text.get_width() // 2, self.HEIGHT // 2))
 
 
         pygame.display.flip()
@@ -569,7 +566,8 @@ class Game():
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load(os.path.join(self.current_dir, "final_boss.mp3"))
                     pygame.mixer.music.play(-1)
-                    self.enemy_speed = 3 * self.difficulty_multiplier
+                    self.enemy_speed = 4 * self.difficulty_multiplier
+ 
                     
                 elif self.current_level < 6:
                     self.enemies = []  # Clear all enemies on level up

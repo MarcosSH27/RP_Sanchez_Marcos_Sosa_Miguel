@@ -20,7 +20,7 @@ class ControlPynput:
             "R": False,
             "Q": False,
             "E": False,
-            "N": False,
+            "M": False,
             "H": False,
         }
         self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
@@ -51,8 +51,8 @@ class ControlPynput:
                 self.keys_state["Q"] = True
             elif key.char == "e":
                 self.keys_state["E"] = True
-            elif key.char == "n":
-                self.keys_state["N"] = True
+            elif key.char == "m":
+                self.keys_state["M"] = True
             elif key.char == "h":
                 self.keys_state["H"] = True
         except AttributeError:
@@ -82,8 +82,8 @@ class ControlPynput:
                 self.keys_state["Q"] = False
             elif key.char == "e":
                 self.keys_state["E"] = False
-            elif key.char == "n":
-                self.keys_state["N"] = False
+            elif key.char == "m":
+                self.keys_state["M"] = False
             elif key.char == "h":
                 self.keys_state["H"] = False
         except AttributeError:
@@ -138,8 +138,8 @@ class ControlPynput:
                 decision = "Q"
             elif self.keys_state["E"]:
                 decision = "E"
-            elif self.keys_state["N"]:
-                decision = "N"
+            elif self.keys_state["M"]:
+                decision = "M"
             elif self.keys_state["H"]:
                 decision = "H"
 
