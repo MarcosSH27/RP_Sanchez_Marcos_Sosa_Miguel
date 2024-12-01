@@ -48,7 +48,7 @@ class Result(object):
             rospy.loginfo(" The score is [%s]", score)
             rospy.logwarn("Client service:  ")
             score_srv = self.__get_user_score.call(self.name)
-            rospy.loginfo(f" The service returned: {score_srv} for {self.name}")
+            rospy.loginfo(f" The service returned:  {score_srv} for {self.name}")
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
         
