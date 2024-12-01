@@ -1,0 +1,11 @@
+<launch>
+    <param name="user_name" value="_" />
+    <param name="change_player_color" value="2" />
+    <param name="screen" value="_" />
+
+    <node name ="INFO_USER" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="INFO_USER.py" output="screen"/>
+    <node name ="GAME_NODE" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="GAME_NODE.py" output="screen"/>
+    <node name ="CONTROL_NODE" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="CONTROL_NODE.py" output="screen"/>
+
+    <node name ="RESULT_NODE" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="RESULT_NODE.py" output="screen"/>
+</launch>
