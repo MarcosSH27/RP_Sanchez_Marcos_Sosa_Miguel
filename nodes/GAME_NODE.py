@@ -198,7 +198,7 @@ class Game():
             rospy.loginfo(" User is : %s" , str(user) )
         else:
             rospy.logwarn("Wrong username")
-            return -9999999
+            return -99999999
         response = self.score
         print(" The final score is:" + str(self.score))
         return response
