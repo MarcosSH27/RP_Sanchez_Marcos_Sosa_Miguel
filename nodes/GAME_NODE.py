@@ -14,9 +14,11 @@ import sys
 import os
 import pygame
 import math
+import numpy as np
 
 from std_msgs.msg import String, Int64
 from RP_Sanchez_Marcos_Sosa_Miguel.msg import User_msg
+from RP_Sanchez_Marcos_Sosa_Miguel.srv import GetUserScore, SetGameDifficulty
 
 # Initialize pygame
 pygame.init()
@@ -36,6 +38,10 @@ class Game():
 
         self.__sub_control = rospy.Subscriber("keyboard_control", String, self.control)
 
+        self.service_user_score = rospy.Service("user_score", GetUserScore, self.handle_userscore)
+
+        self.__service_difficulty = rospy.Service("difficulty", SetGameDifficulty, self.handle_setgamedifficulty)
+
         # Screen setup
         self.WIDTH = 800 
         self.HEIGHT = 600
@@ -46,13 +52,15 @@ class Game():
         self.BLACK = (0, 0, 0)
         self.PURPLE = (128, 0, 128)
         self.RED = (255, 0, 0)
+        self.BLUE = (0, 0, 255)
         self.ORANGE = (255, 165, 0)
+        self.change_player_color = 2
 
         # Player setup
         self.player_size = 30
         self.player_x = self.WIDTH // 2 - self.player_size // 2
         self.player_y = self.HEIGHT // 2 - self.player_size // 2
-        self.player_speed = 4 
+        self.player_speed = 3
         self.player_lives = 5  
 
         # Constants for game balance
@@ -84,7 +92,7 @@ class Game():
         # Bullet setup
         self.bullet_size = 5
         self.bullets = []
-        self.bullet_speed = 8  # Reduced from 10 to make the game slightly more challenging
+        self.bullet_speed = 10  
 
         # Game variables
         self.score = 0
@@ -114,7 +122,7 @@ class Game():
 
         # Level variables
         self.current_level = 1
-        self.POINTS_PER_LEVEL = 20
+        self.POINTS_PER_LEVEL = 200
 
         self.waiting = True
 
@@ -134,7 +142,7 @@ class Game():
         self.power_up_timer
         self.power_up_pos 
         self.last_shot_time 
-        self.difficulty_multiplier = 1
+        self.difficulty_multiplier = 0
         # self.ENEMY_SPAWN_RATE 
         self.current_level
 
@@ -142,6 +150,7 @@ class Game():
         self.waiting_decision = True
         self.retry = False
         self.quit = False
+        self.screen_param = "phase1"
 
     def game(self, player):
 
@@ -162,7 +171,6 @@ class Game():
         rospy.loginfo("Game phase started!")
         while self.game_loop():
             pass
-
         self.final()
 
         pygame.quit()
@@ -170,11 +178,11 @@ class Game():
 
     def welcome(self, player):
         try:
-            rospy.loginfo("Welcome phase started!")
+            rospy.logwarn(f"You are at {self.screen_param}")
             rospy.loginfo(" The name is [%s]", player.name)
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
-
+            self.user_name = player.username
             self.game(player)
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
@@ -182,6 +190,18 @@ class Game():
     def final(self):
         rospy.loginfo("Final phase reached, calculating final score...")
         self.__pub_score.publish(self.score)
+    
+    def handle_userscore(self, req):
+        user = req.username
+        # Srv code
+        if(str(user) == str(self.user_name)):
+            rospy.loginfo(" User is : %s" , str(user) )
+        else:
+            rospy.logwarn("Wrong username")
+            return -999999
+        response = self.score
+        print(" The final score is:" + str(self.score))
+        return response
 
     def control(self, msg):
         self.waiting = False
@@ -203,12 +223,18 @@ class Game():
             self.retry = True
         elif decision == "Q":
             self.quit = True
-        elif decision == "E":
-            self.difficulty_multiplier = 0.5
-        elif decision == "M":
-            self.difficulty_multiplier = 1
-        elif decision == "H":
-            self.difficulty_multiplier = 2 
+        elif decision == "1":
+            self.change_player_color = 1
+            self.draw_player()
+            self.draw_player_trail()
+        elif decision == "2":
+            self.change_player_color = 2
+            self.draw_player()
+            self.draw_player_trail()
+        elif decision == "3":
+            self.change_player_color = 3
+            self.draw_player()
+            self.draw_player_trail()
         elif movement == "LEFT":
             self.player_x = max(0, self.player_x - self.player_speed)
         elif movement == "RIGHT":
@@ -281,7 +307,12 @@ class Game():
         self.BIG_ENEMY_SPAWN_RATE = max(200, int(self.BIG_ENEMY_SPAWN_RATE * 0.75))  # Increase big enemy spawn rate
 
     def draw_player(self):
-        pygame.draw.circle(self.screen, self.PURPLE, (int(self.player_x + self.player_size // 2), int(self.player_y + self.player_size // 2)), self.player_size // 2)
+        if self.change_player_color == 1:
+            pygame.draw.circle(self.screen, self.RED, (int(self.player_x + self.player_size // 2), int(self.player_y + self.player_size // 2)), self.player_size // 2)
+        elif self.change_player_color == 2:
+            pygame.draw.circle(self.screen, self.PURPLE, (int(self.player_x + self.player_size // 2), int(self.player_y + self.player_size // 2)), self.player_size // 2)
+        else:
+            pygame.draw.circle(self.screen, self.BLUE, (int(self.player_x + self.player_size // 2), int(self.player_y + self.player_size // 2)), self.player_size // 2)
 
     def draw_enemies(self):
         for enemy in self.enemies:
@@ -301,7 +332,12 @@ class Game():
         for self.pos, self.alpha in self.player_trail:
             self.s = pygame.Surface((5, 5))
             self.s.set_alpha(self.alpha)
-            self.s.fill(self.PURPLE)
+            if self.change_player_color == 1:
+                self.s.fill(self.RED)
+            elif self.change_player_color == 2:
+                self.s.fill(self.PURPLE)
+            else:
+                self.s.fill(self.BLUE)
             self.screen.blit(self.s, self.pos)
 
     def update_player_trail(self):
@@ -387,16 +423,21 @@ class Game():
         self.waiting_decision = True
         self.retry = False
         self.quit = False
+        self.screen_param = "phase3"
+        rospy.logwarn(f"You are at {self.screen_param}")
         while self.waiting_decision:
             if self.retry:
                 pygame.mixer.music.load('background_music.mp3')  
                 pygame.mixer.music.play(-1)  # Restart background music
                 # Enemy setup
-                self.enemy_speed = 1.5  # Reduced from 2 to make the game easier
+                self.enemy_speed = 1.5 * self.difficulty_multiplier  # Reduced from 2 to make the game easier
                 self.ENEMY_SPAWN_RATE = 180
                 # Big enemy setup
                 self.big_enemy_speed = 1
                 self.BIG_ENEMY_SPAWN_RATE = 600
+                self.screen_param = "phase1"
+                rospy.logwarn(f"You are at {self.screen_param}")
+                self.choose_difficulty()
                 return True
             if self.quit:
                 return False
@@ -418,25 +459,47 @@ class Game():
             pass
     
     def choose_difficulty(self):
-        self.difficulty_multiplier = 1.0  # Default difficulty multiplier for normal difficulty
-
         self.screen.fill(self.BLACK)
         self.difficulty_text = self.font.render("Choose Difficulty:", True, self.WHITE)
-        self.options_text = self.font.render("  Easy (E)  Medium (M)  Hard (H)  ", True, self.WHITE)
+        self.options_text = self.font.render("  Easy   Medium   Hard  ", True, self.WHITE)
 
         self.screen.blit(self.difficulty_text, (self.WIDTH // 2 - self.difficulty_text.get_width() // 2, self.HEIGHT // 2 - 100))
         self.screen.blit(self.options_text, (self.WIDTH // 2 - self.options_text.get_width() // 2, self.HEIGHT // 2))
 
 
         pygame.display.flip()
-
         time.sleep(0.5)
-        self.waiting = True
-        while self.waiting:
+        self.difficulty_multiplier = 0
+        while self.difficulty_multiplier==0:
             pass
 
+    def handle_setgamedifficulty(self,req):
+        if self.screen_param == "phase1":
+            difficulty = req.change_difficulty
+            # Srv code
+            if difficulty != "easy" and difficulty != "medium" and difficulty != "hard":
+                rospy.loginfo("Not a difficulty, set to medium")
+                difficulty = "medium"
+                self.difficulty_multiplier = 1
+
+            else:
+                if difficulty == "easy":
+                    self.difficulty_multiplier = 0.5
+                elif difficulty == "medium":
+                    self.difficulty_multiplier = 1
+                else:
+                    self.difficulty_multiplier = 2
+
+            rospy.loginfo(" Difficulty is : %s" , str(difficulty) )
+            response = True
+            print(" Bool:" + str(True))
+            return response
+        else:
+            return False
 
     def show_end_screen(self):
+        self.screen_param = "phase3"
+        rospy.logwarn(f"You are at {self.screen_param}")
         pygame.mixer.music.stop()
         pygame.mixer.music.load(os.path.join(self.current_dir, "end.mp3"))
         pygame.mixer.music.play(-1)
@@ -473,7 +536,8 @@ class Game():
         self.power_up_pos = None
         self.last_shot_time = 0
         self.current_level = 1
-
+        self.screen_param = "phase2"
+        rospy.logwarn(f"You are at {self.screen_param}")
         self.running = True
         while self.running:
             for self.event in pygame.event.get():

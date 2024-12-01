@@ -8,6 +8,7 @@ import time
 
 from std_msgs.msg import String, Int64
 from RP_Sanchez_Marcos_Sosa_Miguel.msg import User_msg
+from RP_Sanchez_Marcos_Sosa_Miguel.srv import GetUserScore
 
 class Result(object):
     def __init__(self):
@@ -20,6 +21,8 @@ class Result(object):
 
         self.__pub_score = rospy.Subscriber("result_information", Int64, self.results)
 
+        self.__get_user_score = rospy.ServiceProxy('user_score', GetUserScore)
+
         time.sleep(2)
 
         self.main()
@@ -27,6 +30,7 @@ class Result(object):
     def main (self):
 
         rospy.loginfo("     Subscriber")
+        # Call the service and get the response
 
     def user_info(self, player):
         try:
@@ -34,6 +38,7 @@ class Result(object):
             rospy.loginfo(" The name is [%s]", player.name)
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
+            self.name = player.name
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
 
@@ -41,12 +46,13 @@ class Result(object):
         try:
             rospy.loginfo("Received results in callback!")
             rospy.loginfo(" The score is [%s]", score)
-
+            rospy.logwarn("Client service:  ")
+            score_srv = self.__get_user_score.call(self.name)
+            rospy.loginfo(f" The service returned: {score_srv} for {self.name}")
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
-
-
-
+        
+    
 if __name__ == '__main__':
     try:
         name_node = "results"

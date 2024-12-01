@@ -19,9 +19,9 @@ class ControlPynput:
             "D": False,
             "R": False,
             "Q": False,
-            "E": False,
-            "M": False,
-            "H": False,
+            "1": False,
+            "2": False,
+            "3": False
         }
         self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
@@ -49,12 +49,12 @@ class ControlPynput:
                 self.keys_state["R"] = True
             elif key.char == "q":
                 self.keys_state["Q"] = True
-            elif key.char == "e":
-                self.keys_state["E"] = True
-            elif key.char == "m":
-                self.keys_state["M"] = True
-            elif key.char == "h":
-                self.keys_state["H"] = True
+            elif key.char == "1":
+                self.keys_state["1"] = True
+            elif key.char == "2":
+                self.keys_state["2"] = True
+            elif key.char == "3":
+                self.keys_state["3"] = True
         except AttributeError:
             pass
 
@@ -80,12 +80,12 @@ class ControlPynput:
                 self.keys_state["R"] = False
             elif key.char == "q":
                 self.keys_state["Q"] = False
-            elif key.char == "e":
-                self.keys_state["E"] = False
-            elif key.char == "m":
-                self.keys_state["M"] = False
-            elif key.char == "h":
-                self.keys_state["H"] = False
+            elif key.char == "1":
+                self.keys_state["1"] = False
+            elif key.char == "2":
+                self.keys_state["2"] = False
+            elif key.char == "3":
+                self.keys_state["3"] = False
         except AttributeError:
             pass
 
@@ -136,12 +136,12 @@ class ControlPynput:
                 decision = "R"
             elif self.keys_state["Q"]:
                 decision = "Q"
-            elif self.keys_state["E"]:
-                decision = "E"
-            elif self.keys_state["M"]:
-                decision = "M"
-            elif self.keys_state["H"]:
-                decision = "H"
+            elif self.keys_state["1"]:
+                decision = "1"
+            elif self.keys_state["2"]:
+                decision = "2"
+            elif self.keys_state["3"]:
+                decision = "3"
 
             if move or shoot or decision:
                 action = f"{move},{shoot},{decision}"
