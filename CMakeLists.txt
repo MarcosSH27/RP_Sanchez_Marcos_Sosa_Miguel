@@ -56,7 +56,7 @@ add_message_files(
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
-   GetUserScore.srv
+   GetUserScor.srv
    SetGameDifficulty.srv
  )
 
