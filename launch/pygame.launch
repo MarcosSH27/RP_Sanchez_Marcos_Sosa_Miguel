@@ -1,6 +1,6 @@
 <launch>
     <param name="user_name" value="_" />
-    <param name="change_player_color" value="2" />
+    <param name="change_player_color" value="2"/>
     <param name="screen" value="_" />
 
     <node name ="INFO_USER" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="INFO_USER.py" output="screen"/>
