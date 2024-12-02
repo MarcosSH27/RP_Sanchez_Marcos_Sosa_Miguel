@@ -226,20 +226,6 @@ class Game():
             self.retry = True
         elif decision == "Q":
             self.quit = True
-        """
-        elif decision == "1":
-            self.change_player_color = 1
-            self.draw_player()
-            self.draw_player_trail()
-        elif decision == "2":
-            self.change_player_color = 2
-            self.draw_player()
-            self.draw_player_trail()
-        elif decision == "3":
-            self.change_player_color = 3
-            self.draw_player()
-            self.draw_player_trail()
-        """
         elif movement == "LEFT":
             self.player_x = max(0, self.player_x - self.player_speed)
         elif movement == "RIGHT":
