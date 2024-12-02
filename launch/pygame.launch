@@ -6,7 +6,7 @@
     <node name ="INFO_USER" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="INFO_USER.py" output="screen"/>
     <node name ="GAME_NODE" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="GAME_NODE.py" output="screen" cwd="node"/>
         
-    <node name ="CONTROL_NODE" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="CONTROL_NODE.py" output="screen"/>
+    <node name ="CONTROL_NODE_PYGAME" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="CONTROL_NODE_PYGAME.py" output="screen"/>
 
     <node name ="RESULT_NODE" pkg="RP_Sanchez_Marcos_Sosa_Miguel" type="RESULT_NODE.py" output="screen"/>
 </launch>

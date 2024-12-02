@@ -23,7 +23,7 @@ class Result(object):
 
         self.__get_user_score = rospy.ServiceProxy('user_score', GetUserScore)
 
-        time.sleep(2)
+        time.sleep(1)
 
         self.main()
 
@@ -38,7 +38,7 @@ class Result(object):
             rospy.loginfo(" The name is [%s]", player.name)
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
-            self.name = player.name
+            self.username = player.username
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
 
@@ -47,8 +47,8 @@ class Result(object):
             rospy.loginfo("Received results in callback!")
             rospy.loginfo(" The score is [%s]", score)
             rospy.logwarn("Client service:  ")
-            score_srv = self.__get_user_score.call(self.name)
-            rospy.loginfo(f" The service returned:  {score_srv} for {self.name}")
+            score_srv = self.__get_user_score.call(self.username)
+            rospy.loginfo(f" The service returned:  {score_srv} for {self.username}")
         except Exception as e:
             rospy.logerr("Error in callback: %s", str(e))
         

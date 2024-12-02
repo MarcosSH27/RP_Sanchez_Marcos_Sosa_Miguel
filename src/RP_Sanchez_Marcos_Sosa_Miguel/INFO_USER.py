@@ -24,6 +24,8 @@ class Infouser(object):
         self.main()
 
     def main(self):
+        time.sleep(1)
+
         player = User_msg()
         
         # Prompt user for information

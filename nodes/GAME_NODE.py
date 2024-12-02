@@ -23,6 +23,8 @@ from RP_Sanchez_Marcos_Sosa_Miguel.srv import GetUserScore, SetGameDifficulty
 # Initialize pygame
 pygame.init()
 
+file_path = rospy.get_param('background_music', '')
+
 class Game():
     def __init__(self):
         """
