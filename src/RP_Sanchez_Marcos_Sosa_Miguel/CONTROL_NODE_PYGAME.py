@@ -153,10 +153,13 @@ class Control_Pygame(object):
                 decision = "Q"
             elif keys_state[pygame.K_1]:
                 decision = "1"
+                rospy.set_param('change_player_color', 1)
             elif keys_state[pygame.K_2]:
                 decision = "2"
+                rospy.set_param('change_player_color', 2)
             elif keys_state[pygame.K_3]:
                 decision = "3"
+                rospy.set_param('change_player_color', 3)
 
             # If an action is determined, publish it
             if move or shoot or decision:

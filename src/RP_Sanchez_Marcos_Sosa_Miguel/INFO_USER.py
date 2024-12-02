@@ -45,6 +45,8 @@ class Infouser(object):
         rospy.loginfo("Publishing user information...")
         self.__pub_user_info.publish(player) 
 
+        rospy.set_param('user_name', player.username)
+
 if __name__ == '__main__':
     try:
         name_node = "info_user"

@@ -138,10 +138,13 @@ class ControlPynput:
                 decision = "Q"
             elif self.keys_state["1"]:
                 decision = "1"
+                rospy.set_param('change_player_color', 1)
             elif self.keys_state["2"]:
                 decision = "2"
+                rospy.set_param('change_player_color', 2)
             elif self.keys_state["3"]:
                 decision = "3"
+                rospy.set_param('change_player_color', 3)
 
             if move or shoot or decision:
                 action = f"{move},{shoot},{decision}"

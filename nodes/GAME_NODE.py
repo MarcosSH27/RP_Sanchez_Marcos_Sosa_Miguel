@@ -23,8 +23,6 @@ from RP_Sanchez_Marcos_Sosa_Miguel.srv import GetUserScore, SetGameDifficulty
 # Initialize pygame
 pygame.init()
 
-file_path = rospy.get_param('background_music', '')
-
 class Game():
     def __init__(self):
         """
@@ -181,6 +179,7 @@ class Game():
     def welcome(self, player):
         try:
             rospy.logwarn(f"You are at {self.screen_param}")
+            rospy.set_param('screen', self.screen_param)
             rospy.loginfo(" The name is [%s]", player.name)
             rospy.loginfo(" The username is [%s]", player.username)
             rospy.loginfo(" The age is [%s]", player.age)
@@ -217,6 +216,8 @@ class Game():
         shoot_direction = ""
         decision = ""
 
+        self.change_player_color = rospy.get_param('change_player_color')
+
         if len(actions) == 3:
             movement, shoot_direction, decision = actions
             # rospy.loginfo(f"Movement: {movement}, Shooting Direction: {shoot_direction}")
@@ -225,6 +226,7 @@ class Game():
             self.retry = True
         elif decision == "Q":
             self.quit = True
+        """
         elif decision == "1":
             self.change_player_color = 1
             self.draw_player()
@@ -237,6 +239,7 @@ class Game():
             self.change_player_color = 3
             self.draw_player()
             self.draw_player_trail()
+        """
         elif movement == "LEFT":
             self.player_x = max(0, self.player_x - self.player_speed)
         elif movement == "RIGHT":
@@ -427,6 +430,7 @@ class Game():
         self.quit = False
         self.screen_param = "phase3"
         rospy.logwarn(f"You are at {self.screen_param}")
+        rospy.set_param('screen', self.screen_param)
         while self.waiting_decision:
             if self.retry:
                 pygame.mixer.music.load('background_music.mp3')  
@@ -439,6 +443,7 @@ class Game():
                 self.BIG_ENEMY_SPAWN_RATE = 600
                 self.screen_param = "phase1"
                 rospy.logwarn(f"You are at {self.screen_param}")
+                rospy.set_param('screen', self.screen_param)
                 self.choose_difficulty()
                 return True
             if self.quit:
@@ -502,6 +507,7 @@ class Game():
     def show_end_screen(self):
         self.screen_param = "phase3"
         rospy.logwarn(f"You are at {self.screen_param}")
+        rospy.set_param('screen', self.screen_param)
         pygame.mixer.music.stop()
         pygame.mixer.music.load(os.path.join(self.current_dir, "end.mp3"))
         pygame.mixer.music.play(-1)
@@ -540,6 +546,7 @@ class Game():
         self.current_level = 1
         self.screen_param = "phase2"
         rospy.logwarn(f"You are at {self.screen_param}")
+        rospy.set_param('screen', self.screen_param)
         self.running = True
         while self.running:
             for self.event in pygame.event.get():
